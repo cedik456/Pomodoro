@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let timer;
   let isRunning = false;
-  let seconds = 50 * 60;
+  let seconds = 30 * 60;
   let currentMode = "pomodoro";
 
   const timeSettings = {
-    pomodoro: 50 * 60,
+    pomodoro: 30 * 60,
     shortBreak: 5 * 60,
     longBreak: 15 * 60,
   };
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (Notification.permission === "default") {
       Notification.requestPermission().then((permission) => {
         if (permission !== "granted") {
-          console.alert("Notification Permission Denied");
+          console.error("Notification Permission Denied");
         }
       });
     }
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
           isRunning = false;
           startPauseBtn.textContent = "Start";
 
-          if (currentMode == "pomodoro") {
+          if (currentMode === "pomodoro") {
             switchMode("shortBreak");
           } else if (currentMode == "shortBreak") {
             switchMode("pomodoro");
@@ -90,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(mode).classList.add("active");
   }
 
+  updateDisplay();
+
   requestNotificationPermission();
 
   startPauseBtn.addEventListener("click", startTimer);
@@ -99,6 +101,4 @@ document.addEventListener("DOMContentLoaded", () => {
       switchMode(e.target.id);
     });
   });
-
-  updateDisplay();
 });
