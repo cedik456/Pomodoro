@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let timer;
   let isRunning = false;
-  let seconds = 30 * 60;
+  let seconds = 25 * 60;
   let currentMode = "pomodoro";
 
   const timeSettings = {
-    pomodoro: 30 * 60,
+    pomodoro: 25 * 60,
     shortBreak: 5 * 60,
     longBreak: 15 * 60,
   };
@@ -36,15 +36,27 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateDisplay() {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    timerDisplay.textContent = `${String(minutes).padStart(2, "0")}:${String(
+
+    const formattedTime = `${String(minutes).padStart(2, "0")}:${String(
       secs
     ).padStart(2, "0")}`;
+
+    timerDisplay.textContent = formattedTime;
+    document.title = `${formattedTime} - ${
+      currentMode.charAt(0).toUpperCase() + currentMode.slice(1)
+    }`;
   }
 
   function startTimer() {
     if (!isRunning) {
+      const startTime = Date.now(); // Capture the start time when the timer begins
+      const endTime = startTime + seconds * 1000; // Calculate the end time
       timer = setInterval(() => {
+        seconds--;
         if (seconds <= 0) {
+          //Added a
+          const now = Date.now(); // Capture the Current time each interval
+          seconds = Math.max(0, Math.floor((endTime - now) / 1000)); // Calculate remaining seconds
           clearInterval(timer);
           isRunning = false;
           startPauseBtn.textContent = "Start";
@@ -62,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
           });
           return;
         }
-        seconds--;
         updateDisplay();
       }, 1000);
       isRunning = true;
